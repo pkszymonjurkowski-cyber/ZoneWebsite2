@@ -14,26 +14,46 @@ box-sizing:border-box;
 font-family:Arial,sans-serif;
 }
 
+html{
+zoom:72%;
+}
+
 body{
 background:#020202;
 color:white;
 overflow-x:hidden;
-zoom:70%;
+}
+
+.page-wrap{
+max-width:1280px;
+margin:0 auto;
+position:relative;
+z-index:10;
 }
 
 /* NAVBAR */
 
+.nav-wrapper{
+position:sticky;
+top:20px;
+z-index:1000;
+width:100%;
+margin:0 auto 0 auto;
+padding-top:30px;
+}
+
 nav{
-width:90%;
-margin:auto;
-margin-top:50px;
-background:#090909;
-border:1px solid #151515;
+width:100%;
+background:rgba(9,9,9,0.45);
+border:1px solid rgba(255,255,255,0.07);
 border-radius:35px;
 padding:25px 45px;
 display:flex;
 align-items:center;
 justify-content:space-between;
+backdrop-filter:blur(20px);
+-webkit-backdrop-filter:blur(20px);
+box-shadow:0 4px 30px rgba(0,0,0,0.3);
 }
 
 .leftNav{
@@ -51,6 +71,23 @@ gap:70px;
 margin-left:80px;
 }
 
+.nav-login{
+padding:14px 32px;
+border:1px solid rgba(255,255,255,0.15);
+border-radius:22px;
+background:rgba(255,255,255,0.06);
+color:white;
+font-size:22px;
+font-weight:600;
+cursor:pointer;
+transition:background 0.2s, border-color 0.2s;
+will-change:background;
+}
+
+.nav-login:hover{
+background:rgba(255,255,255,0.11);
+}
+
 .nav-links a{
 color:white;
 text-decoration:none;
@@ -66,33 +103,217 @@ justify-content:center;
 align-items:center;
 flex-direction:column;
 text-align:center;
+margin-top:-180px;
+padding:0 40px;
+position:relative;
+overflow:hidden;
 }
 
-.hero h1{
-font-size:170px;
+.hero-bg{
+position:absolute;
+inset:0;
+background-color:#ffffff;
+background-image:url('Baner1.png');
+background-size:cover;
+background-position:center;
+z-index:0;
 }
 
-.hero p{
-margin-top:15px;
-font-size:42px;
-color:#777;
+.hero-bg::after{
+content:'';
+position:absolute;
+inset:0;
+background:
+  linear-gradient(to bottom, #020202 0%, transparent 20%, transparent 80%, #020202 100%),
+  linear-gradient(to right, rgba(2,2,2,0.5) 0%, transparent 15%, transparent 85%, rgba(2,2,2,0.5) 100%),
+  rgba(2,2,2,0.25);
 }
 
-.hero button{
-margin-top:40px;
-padding:24px 70px;
-border:none;
-border-radius:22px;
-background:white;
-color:black;
-font-size:30px;
+.hero-text-glow{
+display:none;
+}
+
+.hero-content{
+position:relative;
+z-index:1;
+display:flex;
+flex-direction:column;
+align-items:center;
+text-align:center;
+width:100%;
+}
+
+.hero-headline{
+font-size:110px;
+font-weight:800;
+line-height:1.1;
+letter-spacing:-2px;
+}
+
+.hero-headline .purple{
+display:block;
+color:#c4aaff;
+text-shadow:
+  0 0 40px rgba(160,100,255,0.7),
+  0 0 80px rgba(140,80,255,0.4),
+  0 0 120px rgba(120,60,255,0.2);
+position:relative;
+}
+
+.hero-headline .purple::after{
+content:'';
+display:block;
+width:70%;
+height:2px;
+background:linear-gradient(90deg,transparent,rgba(180,130,255,0.6),transparent);
+margin:8px auto 0;
+border-radius:2px;
+}
+
+.hero-sub{
+margin-top:28px;
+font-size:20px;
+color:#666;
+max-width:520px;
+line-height:1.7;
+}
+
+/* PRICING */
+
+.pricing{
+width:90%;
+margin:0 auto 120px;
+}
+
+.pricing-header{
+display:flex;
+justify-content:space-between;
+align-items:flex-end;
+margin-bottom:50px;
+}
+
+.pricing-header-left .eyebrow{
+font-size:18px;
+color:#c4aaff;
+font-weight:600;
+margin-bottom:12px;
+}
+
+.pricing-header-left h2{
+font-size:72px;
+font-weight:800;
+line-height:1.05;
+}
+
+.pricing-header-right{
+font-size:22px;
+color:#555;
+max-width:280px;
+line-height:1.6;
+text-align:right;
+}
+
+.pricing-cards{
+display:flex;
+gap:24px;
+}
+
+.pricing-card{
+flex:1;
+background:#090909;
+border:1px solid #1a1a1a;
+border-radius:28px;
+padding:40px;
+display:flex;
+flex-direction:column;
+position:relative;
+}
+
+.pricing-card.featured{
+border-color:#7c3aed;
+box-shadow:0 0 40px rgba(124,58,237,0.15);
+}
+
+.pricing-card .badge{
+position:absolute;
+top:28px;
+right:28px;
+font-size:15px;
+color:#c4aaff;
+font-weight:600;
+}
+
+.pricing-card .plan-name{
+font-size:26px;
+font-weight:700;
+color:#aaa;
+margin-bottom:20px;
+}
+
+.pricing-card .price{
+font-size:64px;
+font-weight:800;
+line-height:1;
+margin-bottom:30px;
+}
+
+.pricing-card.featured .price{
+color:#c4aaff;
+text-shadow:0 0 30px rgba(160,100,255,0.4);
+}
+
+.pricing-card .features{
+list-style:none;
+display:flex;
+flex-direction:column;
+gap:12px;
+margin-bottom:40px;
+flex:1;
+}
+
+.pricing-card .features li{
+font-size:20px;
+color:#666;
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.pricing-card .features li::before{
+content:'✓';
+color:#c4aaff;
+font-weight:700;
+}
+
+.pricing-card .buy-btn{
+width:100%;
+padding:20px;
+border-radius:16px;
+border:1px solid #2a2a2a;
+background:transparent;
+color:white;
+font-size:20px;
 font-weight:700;
 cursor:pointer;
 transition:0.2s;
+text-decoration:none;
+display:block;
+text-align:center;
 }
 
-.hero button:hover{
-transform:scale(1.05);
+.pricing-card .buy-btn:hover{
+background:#1a1a1a;
+}
+
+.pricing-card.featured .buy-btn{
+background:#7c3aed;
+border-color:#7c3aed;
+color:white;
+box-shadow:0 0 20px rgba(124,58,237,0.4);
+}
+
+.pricing-card.featured .buy-btn:hover{
+background:#6d28d9;
 }
 
 /* SHOWCASE */
@@ -119,47 +340,105 @@ padding:50px;
 
 .showcaseText h2{
 font-size:65px;
+font-weight:800;
+line-height:1.15;
+color:white;
+}
+
+.showcase-gradient{
+background:linear-gradient(90deg,#ffffff 0%,#c4aaff 100%);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+background-clip:text;
 }
 
 .showcaseText p{
 margin-top:20px;
-font-size:28px;
-color:#888;
+font-size:26px;
+color:#666;
+line-height:1.7;
+max-width:700px;
 }
 
 /* FAQ */
 
-.faqTitle{
-text-align:center;
-font-size:90px;
-margin-bottom:70px;
-}
-
-.faq{
+.faq-section{
 width:90%;
-margin:auto;
+margin:0 auto 120px;
+scroll-margin-top:100px;
+}
+
+.faq-section-header{
+margin-bottom:50px;
+}
+
+.faq-section-header .eyebrow{
+font-size:18px;
+color:#c4aaff;
+font-weight:600;
+margin-bottom:12px;
+}
+
+.faq-section-header h2{
+font-size:72px;
+font-weight:800;
+}
+
+.faq-list{
 display:flex;
-gap:35px;
-margin-bottom:140px;
+flex-direction:column;
+gap:16px;
 }
 
-.faqCard{
-flex:1;
+.faq-item{
 background:#090909;
-border:1px solid #151515;
-border-radius:35px;
-padding:45px;
+border:1px solid #1a1a1a;
+border-radius:22px;
+overflow:hidden;
+transition:border-color 0.2s;
 }
 
-.faqCard h3{
-font-size:35px;
-margin-bottom:15px;
+.faq-item:hover{
+border-color:#2a2a2a;
 }
 
-.faqCard p{
+.faq-question{
+width:100%;
+background:none;
+border:none;
+color:white;
+text-align:left;
+padding:32px 40px;
 font-size:24px;
-color:#777;
-line-height:1.6;
+font-weight:600;
+cursor:pointer;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:20px;
+}
+
+.faq-question .icon{
+color:#c4aaff;
+font-size:22px;
+transition:transform 0.2s;
+flex-shrink:0;
+}
+
+.faq-item.open .faq-question .icon{
+transform:rotate(45deg);
+}
+
+.faq-answer{
+display:none;
+padding:0 40px 32px;
+font-size:21px;
+color:#666;
+line-height:1.7;
+}
+
+.faq-item.open .faq-answer{
+display:block;
 }
 
 /* PANEL */
@@ -200,65 +479,126 @@ cursor:pointer;
 
 /* LOGIN GUI */
 
+.modal-overlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.35);
+backdrop-filter:blur(6px);
+-webkit-backdrop-filter:blur(6px);
+z-index:99998;
+display:none;
+opacity:0;
+transition:opacity 0.18s ease;
+}
+
+.modal-overlay.visible{
+opacity:1;
+}
+
 .login-panel{
 position:fixed;
 top:50%;
 left:50%;
-transform:translate(-50%,-50%);
+transform:translate(-50%, -48%);
 z-index:99999;
 display:none;
+opacity:0;
+transition:opacity 0.18s ease, transform 0.18s ease;
+width:460px;
+}
+
+.login-panel.visible{
+opacity:1;
+transform:translate(-50%, -50%);
 }
 
 .modal-box{
-width:520px;
-background:#090909;
-border:1px solid #151515;
-border-radius:35px;
-padding:45px;
-box-shadow:0 0 40px rgba(0,0,0,0.5);
+background:rgba(12,12,12,0.35);
+border:1px solid rgba(255,255,255,0.08);
+border-radius:28px;
+padding:48px 44px;
+box-shadow:0 8px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+backdrop-filter:blur(24px);
+-webkit-backdrop-filter:blur(24px);
 }
 
 .modal-box h2{
-text-align:center;
-font-size:45px;
-margin-bottom:20px;
+font-size:28px;
+font-weight:700;
+margin-bottom:8px;
+letter-spacing:-0.5px;
+}
+
+.modal-subtitle{
+font-size:14px;
+color:#555;
+margin-bottom:30px;
 }
 
 .modal-box input{
 width:100%;
-margin-top:15px;
-padding:20px;
-border:none;
-border-radius:18px;
-background:#111;
+margin-top:12px;
+padding:15px 18px;
+border:1px solid rgba(255,255,255,0.07);
+border-radius:12px;
+background:rgba(255,255,255,0.04);
 color:white;
-font-size:22px;
+font-size:15px;
 outline:none;
+transition:border-color 0.2s;
 }
 
-.modal-box button{
+.modal-box input::placeholder{
+color:#444;
+}
+
+.modal-box input:focus{
+border-color:rgba(196,170,255,0.35);
+background:rgba(255,255,255,0.06);
+}
+
+.modal-main-btn{
 width:100%;
 margin-top:20px;
-padding:20px;
+padding:15px;
 border:none;
-border-radius:18px;
-background:white;
-color:black;
-font-size:23px;
+border-radius:12px;
+background:#7c3aed;
+color:white;
+font-size:15px;
 font-weight:700;
 cursor:pointer;
+transition:0.2s;
+box-shadow:0 0 20px rgba(124,58,237,0.3);
+letter-spacing:0.3px;
+}
+
+.modal-main-btn:hover{
+background:#6d28d9;
+box-shadow:0 0 30px rgba(124,58,237,0.45);
+}
+
+.modal-divider{
+height:1px;
+background:rgba(255,255,255,0.06);
+margin:24px 0;
 }
 
 .switchText{
-margin-top:20px;
 text-align:center;
-color:#777;
-font-size:18px;
+color:#444;
+font-size:13px;
+margin-top:18px;
 }
 
 .switchText span{
-color:white;
+color:#c4aaff;
 cursor:pointer;
+font-weight:600;
+}
+
+.switchText span:hover{
+color:#ffffff;
 }
 
 .registerBox{
@@ -270,10 +610,32 @@ display:none;
 }
 
 .loading{
-margin-top:15px;
+margin-top:12px;
 text-align:center;
-color:#777;
-font-size:18px;
+color:#555;
+font-size:13px;
+}
+
+.modal-close{
+position:absolute;
+top:20px;
+right:24px;
+background:none;
+border:none;
+color:#444;
+font-size:22px;
+cursor:pointer;
+line-height:1;
+padding:4px;
+transition:color 0.2s;
+}
+
+.modal-close:hover{
+color:#fff;
+}
+
+.modal-box-wrap{
+position:relative;
 }
 
 /* NOTIFY */
@@ -303,6 +665,9 @@ Powiadomienie
 
 <!-- NAVBAR -->
 
+<div class="page-wrap">
+
+<div class="nav-wrapper">
 <nav>
 
 <div class="leftNav">
@@ -315,6 +680,10 @@ Powiadomienie
 Strona główna
 </a>
 
+<a href="#faq">
+FAQ
+</a>
+
 <a href="https://discord.gg/YQ84VdEg39" target="_blank">
 Kontakt
 </a>
@@ -323,23 +692,88 @@ Kontakt
 
 </div>
 
+<button class="nav-login" onclick="openModal()">Zaloguj się</button>
+
 </nav>
+</div>
+
+</div><!-- /page-wrap -->
 
 <!-- HERO -->
 
 <section class="hero">
 
-<h1>
-Zone Client
+<div class="hero-bg"></div>
+<div class="hero-text-glow"></div>
+
+<div class="hero-content">
+
+<h1 class="hero-headline">
+Ulepsz komfort<br>grania z<br>
+<span class="purple">Zone Client.</span>
 </h1>
 
-<p>
-Nowy topowy client Minecraft
+<p class="hero-sub">
+Zone Client to nie jest zwykły client — to narzędzie, które pozwala ci wyciągnąć absolutne maksimum z każdej sesji w Minecraft. Więcej kontroli, lepsza responsywność, zero kompromisów.
 </p>
 
-<button onclick="openModal()">
-Zaloguj się
-</button>
+</div>
+
+</section>
+
+<div class="page-wrap">
+
+<!-- PRICING -->
+
+<section class="pricing">
+
+<div class="pricing-header">
+<div class="pricing-header-left">
+<div class="eyebrow">Zdobądź dostęp</div>
+<h2>Wejdź na wyższy<br>poziom gry.</h2>
+</div>
+<div class="pricing-header-right">
+Wybierz plan i zacznij grać lepiej już dziś.
+</div>
+</div>
+
+<div class="pricing-cards">
+
+<div class="pricing-card">
+<div class="plan-name">30 dni</div>
+<div class="price">30 zł</div>
+<ul class="features">
+<li>Wszystkie funkcje</li>
+<li>Aktualizacje klienta</li>
+<li>Dostęp do modułów</li>
+</ul>
+<a href="https://discord.gg/YQ84VdEg39" target="_blank" class="buy-btn">Zakup →</a>
+</div>
+
+<div class="pricing-card featured">
+<div class="badge">Najlepszy wybór</div>
+<div class="plan-name">Lifetime</div>
+<div class="price">50 zł</div>
+<ul class="features">
+<li>Wszystkie funkcje</li>
+<li>Aktualizacje klienta</li>
+<li>Dostęp do modułów</li>
+</ul>
+<a href="https://discord.gg/YQ84VdEg39" target="_blank" class="buy-btn">Zakup →</a>
+</div>
+
+<div class="pricing-card">
+<div class="plan-name">Rok</div>
+<div class="price">40 zł</div>
+<ul class="features">
+<li>Wszystkie funkcje</li>
+<li>Aktualizacje klienta</li>
+<li>Dostęp do modułów</li>
+</ul>
+<a href="https://discord.gg/YQ84VdEg39" target="_blank" class="buy-btn">Zakup →</a>
+</div>
+
+</div>
 
 </section>
 
@@ -347,17 +781,16 @@ Zaloguj się
 
 <section class="showcase">
 
-<img src="Showcase.png">
+<img src="pokazanie1.png">
 
 <div class="showcaseText">
 
 <h2>
-Topowy nowoczesny client
+<span class="showcase-gradient">Topowy nowoczesny client</span>
 </h2>
 
 <p>
-Zone Client oferuje świetną optymalizację,
-wiele modułów oraz nowoczesny launcher.
+Zone Client oferuje świetną optymalizację i dziesiątki modułów — od płynniejszego renderowania po precyzyjne sterowanie walką. Zbudowany dla graczy, którzy nie tolerują kompromisów.
 </p>
 
 </div>
@@ -366,45 +799,44 @@ wiele modułów oraz nowoczesny launcher.
 
 <!-- FAQ -->
 
-<h1 class="faqTitle">
-FAQ
-</h1>
+<section class="faq-section" id="faq">
 
-<section class="faq">
-
-<div class="faqCard">
-
-<h3>
-Na jaką wersję?
-</h3>
-
-<p>
-Client działa na Fabric 1.21.8
-</p>
-
+<div class="faq-section-header">
+<div class="eyebrow">Masz pytania?</div>
+<h2>FAQ</h2>
 </div>
 
-<div class="faqCard">
+<div class="faq-list">
 
-<h3>
-Jak pobrać?
-</h3>
-
-<p>
-Pobieranie dostępne po zalogowaniu.
-</p>
-
+<div class="faq-item">
+<button class="faq-question" onclick="toggleFaq(this)">
+Jak dokonać zakupu?
+<span class="icon">+</span>
+</button>
+<div class="faq-answer">
+Zakupu dokonasz na naszym Discordzie — dołącz i otwórz odpowiedni kanał zakupowy.
+</div>
 </div>
 
-<div class="faqCard">
+<div class="faq-item">
+<button class="faq-question" onclick="toggleFaq(this)">
+Na jakiej wersji działa Zone Client?
+<span class="icon">+</span>
+</button>
+<div class="faq-answer">
+Zone Client działa na wersji 1.21.4 Fabric.
+</div>
+</div>
 
-<h3>
-Czy potrzebna Java 21?
-</h3>
-
-<p>
-Tak, launcher sprawdza Java 21.
-</p>
+<div class="faq-item">
+<button class="faq-question" onclick="toggleFaq(this)">
+Na jaki system jest Zone Client?
+<span class="icon">+</span>
+</button>
+<div class="faq-answer">
+Zone Client jest dostępny na system Windows w wersji 64-bitowej.
+</div>
+</div>
 
 </div>
 
@@ -439,37 +871,37 @@ Pobierz Clienta
 
 </section>
 
+</div><!-- /page-wrap -->
+
 <!-- LOGIN -->
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal()"></div>
 
 <div class="login-panel" id="modal">
 
+<div class="modal-box-wrap">
+
 <div class="modal-box">
+
+<button class="modal-close" onclick="closeModal()">✕</button>
 
 <!-- LOGIN BOX -->
 
 <div id="loginBox">
 
-<h2>
-Logowanie
-</h2>
+<h2>Zaloguj się</h2>
+<div class="modal-subtitle">Witaj z powrotem w Zone Client</div>
 
-<input type="text" id="loginUsername" placeholder="Username">
-
+<input type="text" id="loginUsername" placeholder="Nazwa użytkownika">
 <input type="password" id="loginPassword" placeholder="Hasło">
 
-<button onclick="login()">
-Zaloguj się
-</button>
+<button class="modal-main-btn" onclick="login()">Zaloguj się</button>
 
 <div class="loading" id="loginLoading"></div>
 
 <div class="switchText">
-
 Nie masz konta?
-<span onclick="showRegister()">
-Załóż je tutaj
-</span>
-
+<span onclick="showRegister()">Załóż je tutaj</span>
 </div>
 
 </div>
@@ -478,31 +910,21 @@ Załóż je tutaj
 
 <div class="registerBox" id="registerBox">
 
-<h2>
-Rejestracja
-</h2>
+<h2>Utwórz konto</h2>
+<div class="modal-subtitle">Dołącz do Zone Client</div>
 
-<input type="email" id="email" placeholder="Email">
-
-<input type="text" id="username" placeholder="Username">
-
+<input type="email" id="email" placeholder="Adres email">
+<input type="text" id="username" placeholder="Nazwa użytkownika">
 <input type="password" id="password" placeholder="Hasło">
+<input type="text" id="voucher" placeholder="Kod voucher">
 
-<input type="text" id="voucher" placeholder="Voucher">
-
-<button onclick="sendCode()">
-Wyślij kod
-</button>
+<button class="modal-main-btn" onclick="sendCode()">Wyślij kod weryfikacyjny</button>
 
 <div class="loading" id="loadingText"></div>
 
 <div class="switchText">
-
 Masz już konto?
-<span onclick="showLogin()">
-Zaloguj się
-</span>
-
+<span onclick="showLogin()">Zaloguj się</span>
 </div>
 
 </div>
@@ -511,17 +933,16 @@ Zaloguj się
 
 <div class="verifyBox" id="verifyBox">
 
-<h2>
-Weryfikacja
-</h2>
+<h2>Weryfikacja</h2>
+<div class="modal-subtitle">Wpisz kod który wysłaliśmy na Twój email</div>
 
 <input type="text" id="code" placeholder="Kod 6-cyfrowy">
 
-<button onclick="register()">
-Zweryfikuj konto
-</button>
+<button class="modal-main-btn" onclick="register()">Zweryfikuj konto</button>
 
 <div class="loading" id="verifyLoading"></div>
+
+</div>
 
 </div>
 
@@ -534,6 +955,15 @@ Zweryfikuj konto
 const API = "https://zoneapi.onrender.com";
 
 let loadingInterval;
+
+/* FAQ */
+
+function toggleFaq(btn){
+const item = btn.closest('.faq-item');
+const isOpen = item.classList.contains('open');
+document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+if(!isOpen) item.classList.add('open');
+}
 
 /* NOTIFY */
 
@@ -556,12 +986,31 @@ notify.style.display = "none";
 /* MODAL */
 
 function openModal(){
-
-document.getElementById("modal")
-.style.display = "block";
-
+const modal = document.getElementById("modal");
+const overlay = document.getElementById("modalOverlay");
+modal.style.display = "block";
+overlay.style.display = "block";
+requestAnimationFrame(()=>{
+modal.classList.add("visible");
+overlay.classList.add("visible");
+});
 showLogin();
 }
+
+function closeModal(){
+const modal = document.getElementById("modal");
+const overlay = document.getElementById("modalOverlay");
+modal.classList.remove("visible");
+overlay.classList.remove("visible");
+setTimeout(()=>{
+modal.style.display = "none";
+overlay.style.display = "none";
+}, 180);
+}
+
+document.addEventListener("keydown", function(e){
+if(e.key === "Escape") closeModal();
+});
 
 function showRegister(){
 
