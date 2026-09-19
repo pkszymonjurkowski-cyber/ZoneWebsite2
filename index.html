@@ -2,7 +2,10 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src https://zoneapi.onrender.com; img-src 'self' data:;">
 <title>Zone Client</title>
 
 <style>
@@ -27,19 +30,18 @@ overflow-x:hidden;
 .page-wrap{
 max-width:1280px;
 margin:0 auto;
-position:relative;
-z-index:10;
 }
 
 /* NAVBAR */
 
 .nav-wrapper{
-position:sticky;
+position:fixed;
 top:20px;
-z-index:1000;
-width:100%;
-margin:0 auto 0 auto;
-padding-top:30px;
+left:50%;
+transform:translateX(-50%);
+z-index:9000;
+width:90%;
+max-width:1280px;
 }
 
 nav{
@@ -94,6 +96,38 @@ text-decoration:none;
 font-size:24px;
 }
 
+.nav-panel-btn{
+display:none;
+align-items:center;
+gap:10px;
+padding:10px 22px;
+border:1px solid rgba(196,170,255,0.2);
+border-radius:22px;
+background:rgba(124,58,237,0.12);
+color:#c4aaff;
+font-size:18px;
+font-weight:600;
+cursor:pointer;
+transition:background 0.2s;
+}
+
+.nav-panel-btn:hover{
+background:rgba(124,58,237,0.22);
+}
+
+.nav-panel-btn .avatar{
+width:28px;
+height:28px;
+border-radius:50%;
+background:rgba(124,58,237,0.4);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:13px;
+color:white;
+font-weight:700;
+}
+
 /* HERO */
 
 .hero{
@@ -103,8 +137,7 @@ justify-content:center;
 align-items:center;
 flex-direction:column;
 text-align:center;
-margin-top:-180px;
-padding:0 40px;
+padding:120px 40px 40px;
 position:relative;
 overflow:hidden;
 }
@@ -685,14 +718,20 @@ FAQ
 </a>
 
 <a href="https://discord.gg/YQ84VdEg39" target="_blank">
-Kontakt
+Support
 </a>
 
 </div>
 
 </div>
 
-<button class="nav-login" onclick="openModal()">Zaloguj się</button>
+<div style="display:flex;align-items:center;gap:16px;">
+<button class="nav-panel-btn" id="navPanelBtn" onclick="scrollToPanel()">
+<div class="avatar" id="navAvatar">?</div>
+<span id="navUsername">Panel</span>
+</button>
+<button class="nav-login" id="navLoginBtn" onclick="openModal()">Zaloguj się</button>
+</div>
 
 </nav>
 </div>
@@ -953,11 +992,10 @@ Masz już konto?
 <script>
 
 const API = "https://zoneapi.onrender.com";
-
 let loadingInterval;
+let csrfToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
 
 /* FAQ */
-
 function toggleFaq(btn){
 const item = btn.closest('.faq-item');
 const isOpen = item.classList.contains('open');
@@ -965,34 +1003,47 @@ document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
 if(!isOpen) item.classList.add('open');
 }
 
+/* SECURITY - XSS sanitizer */
+function sanitize(str){
+const div = document.createElement('div');
+div.appendChild(document.createTextNode(String(str)));
+return div.innerHTML;
+}
+
+/* SECURITY - block devtools */
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('keydown', e => {
+if(
+  e.key === 'F12' ||
+  (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) ||
+  (e.ctrlKey && e.key === 'U')
+) e.preventDefault();
+});
+setInterval(()=>{
+const t = new Date();
+debugger;
+if(new Date() - t > 100){
+  document.body.innerHTML = '';
+}
+}, 3000);
+
 /* NOTIFY */
-
 function notify(text){
-
-const notify =
-document.getElementById("notify");
-
-notify.innerText = text;
-
-notify.style.display = "block";
-
-setTimeout(()=>{
-
-notify.style.display = "none";
-
-},3000);
+const el = document.getElementById("notify");
+el.innerText = sanitize(text);
+el.style.display = "block";
+setTimeout(()=>{ el.style.display = "none"; }, 3000);
 }
 
 /* MODAL */
-
 function openModal(){
 const modal = document.getElementById("modal");
 const overlay = document.getElementById("modalOverlay");
 modal.style.display = "block";
 overlay.style.display = "block";
 requestAnimationFrame(()=>{
-modal.classList.add("visible");
-overlay.classList.add("visible");
+  modal.classList.add("visible");
+  overlay.classList.add("visible");
 });
 showLogin();
 }
@@ -1003,276 +1054,156 @@ const overlay = document.getElementById("modalOverlay");
 modal.classList.remove("visible");
 overlay.classList.remove("visible");
 setTimeout(()=>{
-modal.style.display = "none";
-overlay.style.display = "none";
+  modal.style.display = "none";
+  overlay.style.display = "none";
 }, 180);
 }
 
-document.addEventListener("keydown", function(e){
+document.addEventListener("keydown", e => {
 if(e.key === "Escape") closeModal();
 });
 
 function showRegister(){
-
-document.getElementById("loginBox")
-.style.display = "none";
-
-document.getElementById("verifyBox")
-.style.display = "none";
-
-document.getElementById("registerBox")
-.style.display = "block";
+document.getElementById("loginBox").style.display = "none";
+document.getElementById("verifyBox").style.display = "none";
+document.getElementById("registerBox").style.display = "block";
 }
 
 function showLogin(){
+document.getElementById("registerBox").style.display = "none";
+document.getElementById("verifyBox").style.display = "none";
+document.getElementById("loginBox").style.display = "block";
+}
 
-document.getElementById("registerBox")
-.style.display = "none";
+/* AFTER LOGIN */
+function onLoginSuccess(username){
+closeModal();
+// Navbar
+document.getElementById("navLoginBtn").style.display = "none";
+const panelBtn = document.getElementById("navPanelBtn");
+panelBtn.style.display = "flex";
+document.getElementById("navUsername").innerText = sanitize(username);
+document.getElementById("navAvatar").innerText = sanitize(username.charAt(0).toUpperCase());
+// Panel
+document.getElementById("panel").style.display = "block";
+document.getElementById("panelUsername").innerText = sanitize(username);
+}
 
-document.getElementById("verifyBox")
-.style.display = "none";
-
-document.getElementById("loginBox")
-.style.display = "block";
+function scrollToPanel(){
+document.getElementById("panel").scrollIntoView({behavior:"smooth"});
 }
 
 /* LOADING */
-
 function startLoading(id){
-
 let dots = 0;
-
 loadingInterval = setInterval(()=>{
-
-dots++;
-
-if(dots > 3){
-dots = 0;
-}
-
-document.getElementById(id)
-.innerText =
-"Loading" + ".".repeat(dots);
-
-},500);
+  dots = (dots % 3) + 1;
+  document.getElementById(id).innerText = "Ładowanie" + ".".repeat(dots);
+}, 500);
 }
 
 function stopLoading(id){
-
 clearInterval(loadingInterval);
-
-document.getElementById(id)
-.innerText = "";
+document.getElementById(id).innerText = "";
 }
 
 /* SEND CODE */
-
 async function sendCode(){
-
-const email =
-document.getElementById("email").value;
-
-const username =
-document.getElementById("username").value;
-
-const password =
-document.getElementById("password").value;
-
-const voucher =
-document.getElementById("voucher").value;
+const email = sanitize(document.getElementById("email").value.trim());
+const username = sanitize(document.getElementById("username").value.trim());
+const password = document.getElementById("password").value;
+const voucher = sanitize(document.getElementById("voucher").value.trim());
 
 if(!email || !username || !password || !voucher){
+  notify("Uzupełnij wszystkie pola");
+  return;
+}
 
-notify("Uzupełnij wszystkie pola");
-return;
+if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+  notify("Nieprawidłowy adres email");
+  return;
 }
 
 startLoading("loadingText");
-
 try{
-
-const response = await fetch(
-"https://zoneapi.onrender.com/send-code",
-{
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-email
-})
-}
-);
-
-const data = await response.json();
-
-stopLoading("loadingText");
-
-if(data.success){
-
-notify("Kod wysłany");
-
-document.getElementById("registerBox")
-.style.display = "none";
-
-document.getElementById("verifyBox")
-.style.display = "block";
-
-}else{
-
-notify(data.message || "Błąd wysyłania");
-}
-
-}catch(err){
-
-stopLoading("loadingText");
-
-notify("API Offline");
+  const res = await fetch("https://zoneapi.onrender.com/send-code", {
+    method:"POST",
+    headers:{"Content-Type":"application/json","X-CSRF-Token":csrfToken},
+    body:JSON.stringify({email})
+  });
+  const data = await res.json();
+  stopLoading("loadingText");
+  if(data.success){
+    notify("Kod wysłany");
+    document.getElementById("registerBox").style.display = "none";
+    document.getElementById("verifyBox").style.display = "block";
+  } else {
+    notify(sanitize(data.message) || "Błąd wysyłania");
+  }
+} catch(err){
+  stopLoading("loadingText");
+  notify("API Offline");
 }
 }
 
 /* REGISTER */
-
 async function register(){
-
-const email =
-document.getElementById("email").value;
-
-const username =
-document.getElementById("username").value;
-
-const password =
-document.getElementById("password").value;
-
-const voucher =
-document.getElementById("voucher").value;
-
-const code =
-document.getElementById("code").value;
+const email = sanitize(document.getElementById("email").value.trim());
+const username = sanitize(document.getElementById("username").value.trim());
+const password = document.getElementById("password").value;
+const voucher = sanitize(document.getElementById("voucher").value.trim());
+const code = sanitize(document.getElementById("code").value.trim());
 
 startLoading("verifyLoading");
-
 try{
-
-const response = await fetch(
-API + "/register",
-{
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-email,
-username,
-password,
-voucher,
-code
-})
-}
-);
-
-const data = await response.json();
-
-console.log(data);
-
-stopLoading("verifyLoading");
-
-if(data.success){
-
-notify("Konto utworzone");
-
-document.getElementById("modal")
-.style.display = "none";
-
-document.getElementById("panel")
-.style.display = "block";
-
-document.getElementById("panelUsername")
-.innerText = username;
-
-document.getElementById("panelEmail")
-.innerText = email;
-
-}else{
-
-notify(data.message || "Rejestracja nieudana");
-}
-
-}catch(err){
-
-console.log(err);
-
-stopLoading("verifyLoading");
-
-notify("Register error");
+  const res = await fetch(API + "/register", {
+    method:"POST",
+    headers:{"Content-Type":"application/json","X-CSRF-Token":csrfToken},
+    body:JSON.stringify({email, username, password, voucher, code})
+  });
+  const data = await res.json();
+  stopLoading("verifyLoading");
+  if(data.success){
+    notify("Konto utworzone");
+    onLoginSuccess(username);
+    document.getElementById("panelEmail").innerText = sanitize(email);
+  } else {
+    notify(sanitize(data.message) || "Rejestracja nieudana");
+  }
+} catch(err){
+  stopLoading("verifyLoading");
+  notify("Błąd rejestracji");
 }
 }
 
 /* LOGIN */
-
 async function login(){
+const username = sanitize(document.getElementById("loginUsername").value.trim());
+const password = document.getElementById("loginPassword").value;
 
-const username =
-document.getElementById("loginUsername").value;
-
-const password =
-document.getElementById("loginPassword").value;
+if(!username || !password){
+  notify("Uzupełnij wszystkie pola");
+  return;
+}
 
 startLoading("loginLoading");
-
 try{
-
-const response = await fetch(
-API + "/login",
-{
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-username,
-password
-})
-}
-);
-
-const data = await response.json();
-
-console.log(data);
-
-stopLoading("loginLoading");
-
-if(data.success){
-
-notify("Zalogowano");
-
-document.getElementById("modal")
-.style.display = "none";
-
-document.getElementById("panel")
-.style.display = "block";
-
-document.getElementById("panelUsername")
-.innerText = username;
-
-}else{
-
-notify(data.message || "Błędny login");
-}
-
-}catch(err){
-
-console.log(err);
-
-stopLoading("loginLoading");
-
-notify("Login error");
+  const res = await fetch(API + "/login", {
+    method:"POST",
+    headers:{"Content-Type":"application/json","X-CSRF-Token":csrfToken},
+    body:JSON.stringify({username, password})
+  });
+  const data = await res.json();
+  stopLoading("loginLoading");
+  if(data.success){
+    notify("Zalogowano");
+    onLoginSuccess(username);
+  } else {
+    notify(sanitize(data.message) || "Błędny login lub hasło");
+  }
+} catch(err){
+  stopLoading("loginLoading");
+  notify("Błąd logowania");
 }
 }
 
